@@ -1,12 +1,663 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=https://neurobridge-iota.vercel.app">
-  <title>NeuroBridge</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroBridge — Adaptive Learning for Every Mind</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0f0f1a;
+      --surface2: #161625;
+      --surface3: #1e1e30;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.12);
+      --teal: #00e5c8;
+      --amber: #ffb547;
+      --coral: #ff6b6b;
+      --lavender: #b8a9ff;
+      --text: #ede9ff;
+      --muted: #7a7498;
+      --radius: 16px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 16px;
+      line-height: 1.6; overflow-x: hidden; min-height: 100vh;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.5;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 36px;
+      background: rgba(7,7,15,0.9); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border); z-index: 200;
+    }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; }
+    .logo span { color: var(--teal); }
+    .nav-right { display: flex; align-items: center; gap: 24px; }
+    .nav-right a { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+    .nav-right a:hover { color: var(--text); }
+    .nav-pill { background: var(--teal); color: #07070f !important; padding: 7px 18px; border-radius: 100px; font-size: 0.82rem !important; font-weight: 700 !important; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 100px 24px 60px; position: relative; overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(0,229,200,0.14) 0%, transparent 60%),
+        radial-gradient(ellipse 35% 35% at 85% 55%, rgba(184,169,255,0.09) 0%, transparent 50%),
+        radial-gradient(ellipse 35% 35% at 15% 65%, rgba(255,181,71,0.07) 0%, transparent 50%);
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,229,200,0.08); border: 1px solid rgba(0,229,200,0.22);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 0.78rem; font-weight: 600; color: var(--teal);
+      margin-bottom: 24px; animation: fadeUp 0.7s ease both;
+    }
+    h1 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(2.6rem, 6.5vw, 5rem);
+      line-height: 1.05; letter-spacing: -0.03em; max-width: 760px;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(120deg, var(--teal) 0%, var(--lavender) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-p {
+      max-width: 480px; color: var(--muted); font-size: 1.05rem;
+      margin: 20px auto 36px; line-height: 1.75;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; animation: fadeUp 0.7s 0.3s ease both; }
+    .btn-main {
+      background: var(--teal); color: #07070f; border: none;
+      padding: 13px 30px; border-radius: 100px;
+      font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 28px rgba(0,229,200,0.28);
+    }
+    .btn-main:hover { transform: translateY(-2px); box-shadow: 0 0 44px rgba(0,229,200,0.42); }
+    .btn-main:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border2); padding: 13px 30px; border-radius: 100px;
+      font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.95rem;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.04); }
+    .trust-strip {
+      display: flex; gap: 32px; flex-wrap: wrap; justify-content: center;
+      margin-top: 56px; animation: fadeUp 0.7s 0.4s ease both;
+    }
+    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: var(--muted); }
+
+    /* APP */
+    #app { padding: 80px 20px 100px; max-width: 1000px; margin: 0 auto; }
+    .app-header { text-align: center; margin-bottom: 48px; }
+    .section-eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+    .app-header h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: clamp(1.8rem, 3.5vw, 2.6rem); letter-spacing: -0.025em; line-height: 1.12; }
+    .app-header h2 span { color: var(--lavender); }
+    .app-header p { color: var(--muted); font-size: 0.95rem; margin-top: 12px; }
+
+    /* STEP TABS */
+    .steps-nav {
+      display: flex; gap: 0; margin-bottom: 32px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 6px;
+    }
+    .step-tab {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 16px; border-radius: 10px;
+      font-size: 0.82rem; font-weight: 600; color: var(--muted);
+      cursor: pointer; transition: all 0.2s; border: none; background: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .step-tab.active { background: var(--surface3); color: var(--text); }
+    .step-tab .tab-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--surface3); display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700; color: var(--muted); transition: all 0.2s;
+    }
+    .step-tab.active .tab-num { background: var(--teal); color: #07070f; }
+    .step-tab.done .tab-num { background: rgba(0,229,200,0.2); color: var(--teal); }
+
+    /* PANELS */
+    .panel { display: none; animation: fadeUp 0.4s ease both; }
+    .panel.active { display: block; }
+
+    /* PANEL 1 */
+    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .profile-card {
+      background: var(--surface); border: 2px solid var(--border);
+      border-radius: 14px; padding: 20px 18px;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .profile-card:hover { border-color: var(--border2); background: var(--surface2); }
+    .profile-card.selected { border-color: var(--teal); background: rgba(0,229,200,0.06); }
+    .profile-card .p-icon { font-size: 1.8rem; flex-shrink: 0; margin-top: 2px; }
+    .profile-card h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .profile-card p { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
+    .profile-card.selected h4 { color: var(--teal); }
+    .access-section { margin-top: 28px; }
+    .access-label { font-size: 0.78rem; font-weight: 600; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+    .toggle-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .toggle-chip {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 100px; padding: 8px 16px;
+      font-size: 0.82rem; font-weight: 500; cursor: pointer;
+      transition: all 0.2s; color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .toggle-chip.on { background: rgba(0,229,200,0.1); color: var(--teal); border-color: rgba(0,229,200,0.3); }
+    .toggle-chip .chip-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+    /* PANEL 2 */
+    .input-area { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .input-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 18px; border-bottom: 1px solid var(--border); background: var(--surface2);
+    }
+    .input-toolbar span { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+    .char-count { font-size: 0.75rem; color: var(--muted); }
+    textarea {
+      width: 100%; min-height: 200px; background: transparent; border: none; outline: none;
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; line-height: 1.7; resize: vertical; padding: 20px 18px;
+    }
+    textarea::placeholder { color: var(--muted); }
+    .input-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 18px; border-top: 1px solid var(--border);
+      background: var(--surface2); flex-wrap: wrap; gap: 10px;
+    }
+    .sample-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .sample-btn {
+      background: var(--surface3); border: 1px solid var(--border);
+      border-radius: 100px; padding: 5px 12px;
+      font-size: 0.75rem; font-weight: 500; color: var(--muted);
+      cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    }
+    .sample-btn:hover { border-color: var(--border2); color: var(--text); }
+
+    /* PANEL 3 */
+    .output-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .output-badge {
+      display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600;
+      background: rgba(0,229,200,0.1); color: var(--teal);
+      border: 1px solid rgba(0,229,200,0.2); padding: 5px 14px; border-radius: 100px;
+    }
+    .output-actions { display: flex; gap: 8px; }
+    .icon-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 8px 14px;
+      font-size: 0.8rem; font-weight: 500; color: var(--muted);
+      cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .icon-btn:hover { border-color: var(--border2); color: var(--text); }
+    .icon-btn.speaking { color: var(--teal); border-color: rgba(0,229,200,0.3); background: rgba(0,229,200,0.06); }
+    .output-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px; min-height: 200px;
+      line-height: 1.8; font-size: 0.95rem; color: var(--text);
+    }
+    .output-box.loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; color: var(--muted); }
+    .loader { width: 40px; height: 40px; border-radius: 50%; border: 3px solid var(--surface3); border-top-color: var(--teal); animation: rotate 0.8s linear infinite; }
+    .loader-text { font-size: 0.85rem; }
+    .output-box h1 { font-family: 'Syne', sans-serif; margin: 20px 0 10px; font-size: 1.4rem; color: var(--teal); }
+    .output-box h2 { font-family: 'Syne', sans-serif; margin: 18px 0 8px; font-size: 1.15rem; color: var(--lavender); }
+    .output-box h3 { font-family: 'Syne', sans-serif; margin: 14px 0 6px; font-size: 1rem; color: var(--amber); }
+    .output-box p { margin-bottom: 14px; }
+    .output-box ul, .output-box ol { padding-left: 20px; margin-bottom: 14px; }
+    .output-box li { margin-bottom: 6px; }
+    .output-box strong { color: var(--teal); font-weight: 600; }
+    .output-box em { color: var(--lavender); font-style: italic; }
+    .output-box table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.88rem; }
+    .output-box th { background: var(--surface2); padding: 10px 14px; text-align: left; font-family: 'Syne', sans-serif; font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); }
+    .output-box td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    .output-box blockquote { border-left: 3px solid var(--teal); padding: 12px 18px; background: var(--surface2); border-radius: 0 10px 10px 0; margin: 16px 0; color: var(--muted); font-style: italic; }
+    .output-box code { background: var(--surface3); padding: 2px 6px; border-radius: 5px; font-size: 0.85em; color: var(--amber); }
+    .followup-area { margin-top: 20px; display: flex; gap: 10px; }
+    .followup-input {
+      flex: 1; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 16px; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s;
+    }
+    .followup-input:focus { border-color: var(--border2); }
+    .followup-input::placeholder { color: var(--muted); }
+    .followup-send {
+      background: var(--teal); color: #07070f; border: none; border-radius: 12px; padding: 12px 20px;
+      font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.88rem;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .followup-send:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,229,200,0.3); }
+    .followup-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* FOCUS TIMER */
+    .focus-bar {
+      display: none; position: fixed; bottom: 24px; right: 24px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px 20px; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4); min-width: 200px;
+    }
+    .focus-bar.visible { display: block; animation: fadeUp 0.3s ease both; }
+    .focus-bar-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .focus-bar-top span { font-size: 0.78rem; font-weight: 600; color: var(--muted); }
+    .focus-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; }
+    .focus-time { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; letter-spacing: -0.03em; color: var(--teal); line-height: 1; }
+    .focus-progress { height: 3px; background: var(--surface3); border-radius: 100px; margin-top: 10px; overflow: hidden; }
+    .focus-fill { height: 100%; background: var(--teal); border-radius: 100px; transition: width 1s linear; }
+    .focus-label { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+
+    /* ACCESSIBILITY */
+    body.dyslexia .output-box, body.dyslexia textarea { font-family: 'Comic Sans MS', cursive !important; letter-spacing: 0.05em; line-height: 2; }
+    body.high-contrast { --bg: #000; --surface: #111; --surface2: #1a1a1a; --text: #fff; --muted: #aaa; }
+
+    /* FEATURES */
+    #features { padding: 80px 20px; max-width: 1000px; margin: 0 auto; }
+    .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 40px; }
+    .feat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: border-color 0.25s, transform 0.25s; }
+    .feat-card:hover { border-color: var(--border2); transform: translateY(-3px); }
+    .feat-icon { font-size: 1.6rem; margin-bottom: 14px; }
+    .feat-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+    .feat-card p { color: var(--muted); font-size: 0.85rem; line-height: 1.65; }
+
+    footer { border-top: 1px solid var(--border); padding: 40px 24px; text-align: center; color: var(--muted); font-size: 0.82rem; }
+    footer .logo { font-size: 1.1rem; margin-bottom: 10px; display: block; }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      nav { padding: 14px 18px; }
+      .nav-right a:not(.nav-pill) { display: none; }
+      .profile-grid { grid-template-columns: 1fr; }
+      .step-tab { font-size: 0.75rem; padding: 8px 10px; }
+    }
+  </style>
 </head>
 <body>
-  <script>window.location.href = "https://neurobridge-iota.vercel.app";</script>
-  <p>Redirecting to <a href="https://neurobridge-iota.vercel.app">NeuroBridge</a>...</p>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Neuro<span>Bridge</span></div>
+  <div class="nav-right">
+    <a href="#app">Try it</a>
+    <a href="#features">Features</a>
+    <a href="#app" class="nav-pill">Start learning →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">✦ AI for Accessibility · Isazi Hackathon 2026</div>
+  <h1>Learning that adapts to <em>your mind</em></h1>
+  <p class="hero-p">Paste any lesson or topic. NeuroBridge uses AI to reformat it for your cognitive style — visual, text-based, interactive, or ADHD focus mode — instantly.</p>
+  <div class="hero-btns">
+    <button class="btn-main" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Try it now — it's free</button>
+    <button class="btn-ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See how it works</button>
+  </div>
+  <div class="trust-strip">
+    <div class="trust-item"><span>🧠</span><span>Adapts to your cognitive style</span></div>
+    <div class="trust-item"><span>🔊</span><span>Read-aloud any output</span></div>
+    <div class="trust-item"><span>⚡</span><span>Works on any device, any topic</span></div>
+    <div class="trust-item"><span>🇿🇦</span><span>Built for SA learners</span></div>
+  </div>
+</section>
+
+<!-- APP -->
+<section id="app">
+  <div class="app-header">
+    <div class="section-eyebrow">The App</div>
+    <h2>Three steps to <span>personalised learning</span></h2>
+    <p>Set your profile once. Paste any content. Get it back in a way that works for your brain.</p>
+  </div>
+
+  <div class="steps-nav">
+    <button class="step-tab active" onclick="goTab(1)" id="tab1"><span class="tab-num">1</span> My Profile</button>
+    <button class="step-tab" onclick="goTab(2)" id="tab2"><span class="tab-num">2</span> My Content</button>
+    <button class="step-tab" onclick="goTab(3)" id="tab3"><span class="tab-num">3</span> Adapted Output</button>
+  </div>
+
+  <!-- PANEL 1 -->
+  <div class="panel active" id="panel1">
+    <div class="section-eyebrow" style="margin-bottom:16px">How do you learn best?</div>
+    <div class="profile-grid">
+      <div class="profile-card selected" onclick="selectProfile(this,'visual')" data-style="visual">
+        <span class="p-icon">👁️</span>
+        <div><h4>Visual Learner</h4><p>I understand better with diagrams, charts, colour-coding, and spatial layouts.</p></div>
+      </div>
+      <div class="profile-card" onclick="selectProfile(this,'reading')" data-style="reading">
+        <span class="p-icon">📖</span>
+        <div><h4>Reading / Writing</h4><p>I prefer structured notes, definitions, bullet points, and written explanations.</p></div>
+      </div>
+      <div class="profile-card" onclick="selectProfile(this,'kinesthetic')" data-style="kinesthetic">
+        <span class="p-icon">🎯</span>
+        <div><h4>Kinesthetic / Interactive</h4><p>I learn by doing — quizzes, examples, real-world scenarios, and challenges.</p></div>
+      </div>
+      <div class="profile-card" onclick="selectProfile(this,'adhd')" data-style="adhd">
+        <span class="p-icon">⚡</span>
+        <div><h4>ADHD / Focus Mode</h4><p>Break it into tiny chunks. One idea at a time. Short sentences. No overwhelm.</p></div>
+      </div>
+    </div>
+    <div class="access-section">
+      <div class="access-label">Accessibility Options</div>
+      <div class="toggle-row">
+        <button class="toggle-chip" onclick="toggleChip(this,'tts')" id="chip-tts"><span class="chip-dot"></span> Auto Read-Aloud</button>
+        <button class="toggle-chip" onclick="toggleChip(this,'dyslexia')" id="chip-dyslexia"><span class="chip-dot"></span> Dyslexia Font</button>
+        <button class="toggle-chip" onclick="toggleChip(this,'contrast')" id="chip-contrast"><span class="chip-dot"></span> High Contrast</button>
+        <button class="toggle-chip" onclick="toggleChip(this,'focus')" id="chip-focus"><span class="chip-dot"></span> Focus Timer</button>
+      </div>
+    </div>
+    <div style="margin-top:28px;display:flex;justify-content:flex-end">
+      <button class="btn-main" onclick="goTab(2)">Next: Add content →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 2 -->
+  <div class="panel" id="panel2">
+    <div class="input-area">
+      <div class="input-toolbar">
+        <span>📄 Paste your lesson, notes, or any topic</span>
+        <span class="char-count" id="char-count">0 / 2000</span>
+      </div>
+      <textarea id="user-input"
+        placeholder="Paste any text here — a paragraph from your textbook, a topic you're studying, lecture notes, anything. NeuroBridge will reformat it for your learning style.
+
+Examples:
+• 'Explain the water cycle'
+• Paste a paragraph from your UNISA study guide
+• 'How does supply and demand work?'
+• Any concept you're struggling with"
+        maxlength="2000" oninput="updateCharCount(this)"></textarea>
+      <div class="input-footer">
+        <div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-bottom:6px">Try a sample topic:</div>
+          <div class="sample-btns">
+            <button class="sample-btn" onclick="loadSample('macro')">Macroeconomics</button>
+            <button class="sample-btn" onclick="loadSample('db')">Databases</button>
+            <button class="sample-btn" onclick="loadSample('audit')">Auditing</button>
+            <button class="sample-btn" onclick="loadSample('photo')">Photosynthesis</button>
+          </div>
+        </div>
+        <button class="btn-main" onclick="adaptContent()" id="adapt-btn">✦ Adapt for me →</button>
+      </div>
+    </div>
+    <div style="margin-top:20px;display:flex;justify-content:space-between;align-items:center">
+      <button class="btn-ghost" onclick="goTab(1)" style="font-size:0.85rem;padding:10px 20px">← Back</button>
+      <div style="font-size:0.78rem;color:var(--muted)">Style: <strong id="style-label" style="color:var(--teal)">Visual</strong></div>
+    </div>
+  </div>
+
+  <!-- PANEL 3 -->
+  <div class="panel" id="panel3">
+    <div class="output-meta">
+      <div class="output-badge" id="output-badge">👁️ Visual format</div>
+      <div class="output-actions">
+        <button class="icon-btn" onclick="speakOutput()" id="speak-btn">🔊 Read aloud</button>
+        <button class="icon-btn" onclick="copyOutput()">📋 Copy</button>
+        <button class="icon-btn" onclick="goTab(2)">✏️ New content</button>
+      </div>
+    </div>
+    <div class="output-box" id="output-box"></div>
+    <div class="followup-area">
+      <input type="text" class="followup-input" id="followup-input"
+        placeholder="Ask a follow-up: 'explain simpler' / 'give me examples' / 'make it shorter'..."
+        onkeydown="if(event.key==='Enter') sendFollowup()" />
+      <button class="followup-send" onclick="sendFollowup()" id="followup-btn">Ask →</button>
+    </div>
+    <div style="margin-top:20px">
+      <button class="btn-ghost" onclick="goTab(1)" style="font-size:0.85rem;padding:10px 20px">← Change profile</button>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div style="max-width:1000px;margin:0 auto;padding:0 20px">
+    <div class="section-eyebrow">Why NeuroBridge</div>
+    <h2 style="font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(1.8rem,3.5vw,2.4rem);letter-spacing:-0.025em;line-height:1.12;margin-bottom:40px">
+      Built for minds that work <span style="color:var(--lavender)">differently</span>
+    </h2>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon">🧩</div><h3>Real AI Adaptation</h3><p>Not templates — Claude AI genuinely rewrites your content in a format matched to your cognitive style on every request.</p></div>
+      <div class="feat-card"><div class="feat-icon">💬</div><h3>Follow-Up Tutor</h3><p>Still confused? Ask follow-up questions. Say "explain simpler" or "give me an example" and the AI keeps going until it clicks.</p></div>
+      <div class="feat-card"><div class="feat-icon">🔊</div><h3>Read-Aloud Everything</h3><p>Every output can be read aloud using your device's built-in TTS. No extra apps, no cost, works on any device.</p></div>
+      <div class="feat-card"><div class="feat-icon">⏱️</div><h3>Focus Timer</h3><p>Pomodoro-style countdown keeps ADHD learners on track. Visible, non-intrusive, and easy to toggle.</p></div>
+      <div class="feat-card"><div class="feat-icon">♿</div><h3>Full Accessibility Stack</h3><p>Dyslexia-friendly font mode, high-contrast theme, keyboard navigation — all built in, one click away.</p></div>
+      <div class="feat-card"><div class="feat-icon">🌍</div><h3>SA Curriculum Ready</h3><p>Works on UNISA study material, matric content, or any topic. Designed for real South African learners.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOCUS TIMER -->
+<div class="focus-bar" id="focus-bar">
+  <div class="focus-bar-top">
+    <span>⚡ Focus Session</span>
+    <button class="focus-close" onclick="closeFocus()">✕</button>
+  </div>
+  <div class="focus-time" id="focus-time">25:00</div>
+  <div class="focus-progress"><div class="focus-fill" id="focus-fill" style="width:100%"></div></div>
+  <div class="focus-label" id="focus-label">Stay focused · break in 25 min</div>
+</div>
+
+<footer>
+  <div class="logo">Neuro<span style="color:var(--teal)">Bridge</span></div>
+  <p>Built for the Isazi.ai × UNISA AI for Accessibility Hackathon 2026</p>
+  <p style="margin-top:6px;color:#3d3a5c">Lethabo Hoaeane · BCom Business Informatics · UNISA</p>
+</footer>
+
+<script>
+  let currentStyle = 'visual';
+  let accessOptions = { tts: false, dyslexia: false, contrast: false, focus: false };
+  let conversationHistory = [];
+  let isSpeaking = false;
+  let focusInterval = null;
+  let focusSeconds = 25 * 60;
+  const totalFocus = 25 * 60;
+
+  const styleLabels = { visual: '👁️ Visual format', reading: '📖 Reading format', kinesthetic: '🎯 Interactive format', adhd: '⚡ Focus format' };
+  const styleNames = { visual: 'Visual', reading: 'Reading / Writing', kinesthetic: 'Kinesthetic', adhd: 'ADHD Focus' };
+
+  const samples = {
+    macro: `Macroeconomics is the branch of economics that studies the behaviour and performance of an economy as a whole. It focuses on aggregate changes in the economy such as unemployment, growth rate, gross domestic product and inflation. Key macroeconomic indicators include GDP (Gross Domestic Product), which measures the total value of all goods and services produced in a country, the Consumer Price Index (CPI) which measures inflation, and the unemployment rate. Central banks use monetary policy tools like interest rates to influence economic activity.`,
+    db: `A database is an organised collection of structured information or data, typically stored electronically in a computer system. A database is usually controlled by a database management system (DBMS). The most common type is the relational database, which stores data in tables with rows and columns. SQL (Structured Query Language) is used to create, read, update, and delete data. Key concepts include primary keys (unique identifiers for each record), foreign keys (links between tables), normalisation (reducing data redundancy), and ACID properties (Atomicity, Consistency, Isolation, Durability).`,
+    audit: `Internal auditing is an independent, objective assurance and consulting activity designed to add value and improve an organisation's operations. It helps an organisation accomplish its objectives by bringing a systematic, disciplined approach to evaluate and improve the effectiveness of risk management, control, and governance processes. The internal auditor examines financial records, assesses internal controls, ensures compliance with laws and regulations, and identifies areas of operational inefficiency. Corporate governance refers to the system of rules, practices and processes by which a company is directed and controlled.`,
+    photo: `Photosynthesis is the process used by plants, algae and some bacteria to harness energy from sunlight and turn it into chemical energy stored in glucose. The overall equation is: 6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂. It occurs in two stages: the light-dependent reactions in the thylakoid membranes (which capture solar energy and split water molecules) and the light-independent Calvin cycle in the stroma (which uses that energy to fix carbon dioxide into glucose). Chlorophyll is the green pigment that absorbs light, primarily in the red and blue wavelengths.`
+  };
+
+  const systemPrompts = {
+    visual: `You are NeuroBridge, an adaptive learning AI for neurodiverse learners. The user has a VISUAL learning style. Reformat the provided content using these rules: Use clear headings (##) to organise information spatially. Use tables wherever comparisons or relationships exist. Use bullet points with emoji labels to colour-code categories. Bold the most important terms. Use "Key Concept" blockquotes for the single most important takeaway. Keep paragraphs very short (2-3 sentences max). End with a "Visual Summary" section using only symbols, arrows (→), and short phrases. Respond in clean Markdown.`,
+    reading: `You are NeuroBridge, an adaptive learning AI for neurodiverse learners. The user has a READING/WRITING learning style. Reformat the provided content using these rules: Start with a clear formal definition. Use numbered lists for processes or sequences. Include a "Key Terms" glossary section with short definitions. Write in clear structured paragraphs with topic sentences. Bold technical vocabulary on first use. Include a "Summary" section at the end with the 3-5 most important points as complete sentences. Respond in clean Markdown.`,
+    kinesthetic: `You are NeuroBridge, an adaptive learning AI for neurodiverse learners. The user has a KINESTHETIC/INTERACTIVE learning style. Reformat the provided content using these rules: Start with a real-world example or analogy. Frame information as "How to" or "What happens when...". Include 3 quiz questions at the end with answers. Use scenario-based examples. Include a "Try it yourself" challenge. Keep the tone active and engaging. Respond in clean Markdown.`,
+    adhd: `You are NeuroBridge, an adaptive learning AI for neurodiverse learners. The user has ADHD and needs a focus-friendly format. Break EVERYTHING into very short chunks — maximum 2 sentences per point. Use ⚡ as a bullet for every point. Never write a paragraph longer than 3 lines. Start with "The ONE thing to know:" followed by a single sentence. Use "🧠 Remember:" callouts for key facts. End with "Quick Recap:" — 3 bullet points only, maximum 10 words each. Respond in clean Markdown.`
+  };
+
+  function goTab(n) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.step-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(`panel${n}`).classList.add('active');
+    document.getElementById(`tab${n}`).classList.add('active');
+    for (let i = 1; i < n; i++) document.getElementById(`tab${i}`).classList.add('done');
+    document.getElementById('app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function selectProfile(el, style) {
+    document.querySelectorAll('.profile-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    currentStyle = style;
+    document.getElementById('style-label').textContent = styleNames[style];
+  }
+
+  function toggleChip(el, option) {
+    accessOptions[option] = !accessOptions[option];
+    el.classList.toggle('on', accessOptions[option]);
+    if (option === 'dyslexia') document.body.classList.toggle('dyslexia', accessOptions[option]);
+    if (option === 'contrast') document.body.classList.toggle('high-contrast', accessOptions[option]);
+    if (option === 'focus') { if (accessOptions[option]) startFocusTimer(); else stopFocusTimer(); }
+  }
+
+  function updateCharCount(el) {
+    document.getElementById('char-count').textContent = `${el.value.length} / 2000`;
+  }
+
+  function loadSample(key) {
+    const ta = document.getElementById('user-input');
+    ta.value = samples[key];
+    updateCharCount(ta);
+  }
+
+  async function adaptContent() {
+    const input = document.getElementById('user-input').value.trim();
+    if (!input) { alert('Please paste some content first!'); return; }
+
+    conversationHistory = [];
+    goTab(3);
+
+    const box = document.getElementById('output-box');
+    box.className = 'output-box loading';
+    box.innerHTML = `<div class="loader"></div><div class="loader-text">Adapting for your ${styleNames[currentStyle]} style...</div>`;
+    document.getElementById('output-badge').textContent = styleLabels[currentStyle];
+
+    const userMessage = `Please adapt the following content for me:\n\n${input}`;
+    conversationHistory.push({ role: 'user', content: userMessage });
+
+    try {
+      const response = await fetch('/api/adapt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory, system: systemPrompts[currentStyle] })
+      });
+
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+
+      conversationHistory.push({ role: 'assistant', content: data.text });
+      box.className = 'output-box';
+      box.innerHTML = renderMarkdown(data.text);
+      if (accessOptions.tts) speakOutput();
+
+    } catch (err) {
+      box.className = 'output-box';
+      box.innerHTML = `<p style="color:var(--coral)">⚠️ Something went wrong. Please try again.</p><p style="color:var(--muted);font-size:0.85rem;margin-top:8px">${err.message}</p>`;
+    }
+  }
+
+  async function sendFollowup() {
+    const input = document.getElementById('followup-input');
+    const question = input.value.trim();
+    if (!question || conversationHistory.length === 0) return;
+
+    input.value = '';
+    const btn = document.getElementById('followup-btn');
+    btn.disabled = true; btn.textContent = '...';
+
+    const box = document.getElementById('output-box');
+    const prev = box.innerHTML;
+    box.innerHTML = prev + `<hr style="border:none;border-top:1px solid var(--border);margin:20px 0"><div style="color:var(--muted);font-size:0.85rem;margin-bottom:8px">You asked: <em>${question}</em></div><div class="loader" style="margin:16px auto"></div>`;
+
+    conversationHistory.push({ role: 'user', content: question });
+
+    try {
+      const response = await fetch('/api/adapt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory, system: systemPrompts[currentStyle] })
+      });
+
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+
+      conversationHistory.push({ role: 'assistant', content: data.text });
+      box.innerHTML = prev + `<hr style="border:none;border-top:1px solid var(--border);margin:20px 0"><div style="color:var(--muted);font-size:0.85rem;margin-bottom:12px">You asked: <em>${question}</em></div>` + renderMarkdown(data.text);
+      if (accessOptions.tts) { window.speechSynthesis.cancel(); window.speechSynthesis.speak(new SpeechSynthesisUtterance(data.text)); }
+
+    } catch (err) {
+      box.innerHTML = prev + `<p style="color:var(--coral);margin-top:16px">⚠️ Follow-up failed. Please try again.</p>`;
+    }
+
+    btn.disabled = false; btn.textContent = 'Ask →';
+  }
+
+  function speakOutput() {
+    const box = document.getElementById('output-box');
+    const btn = document.getElementById('speak-btn');
+    if (isSpeaking) { window.speechSynthesis.cancel(); isSpeaking = false; btn.textContent = '🔊 Read aloud'; btn.classList.remove('speaking'); return; }
+    const utt = new SpeechSynthesisUtterance(box.innerText);
+    utt.rate = 0.95;
+    utt.onend = () => { isSpeaking = false; btn.textContent = '🔊 Read aloud'; btn.classList.remove('speaking'); };
+    window.speechSynthesis.speak(utt);
+    isSpeaking = true; btn.textContent = '⏹ Stop'; btn.classList.add('speaking');
+  }
+
+  function copyOutput() {
+    navigator.clipboard.writeText(document.getElementById('output-box').innerText).then(() => {
+      const btn = event.target; btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy', 2000);
+    });
+  }
+
+  function startFocusTimer() {
+    document.getElementById('focus-bar').classList.add('visible');
+    focusSeconds = totalFocus; updateFocusDisplay();
+    focusInterval = setInterval(() => {
+      focusSeconds--;
+      if (focusSeconds <= 0) { focusSeconds = 0; clearInterval(focusInterval); document.getElementById('focus-label').textContent = '🎉 Break time! Great work.'; }
+      updateFocusDisplay();
+    }, 1000);
+  }
+
+  function updateFocusDisplay() {
+    const m = Math.floor(focusSeconds / 60), s = focusSeconds % 60;
+    document.getElementById('focus-time').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    document.getElementById('focus-fill').style.width = `${(focusSeconds / totalFocus) * 100}%`;
+    if (focusSeconds <= 300) document.getElementById('focus-time').style.color = 'var(--amber)';
+  }
+
+  function stopFocusTimer() { clearInterval(focusInterval); document.getElementById('focus-bar').classList.remove('visible'); }
+  function closeFocus() { stopFocusTimer(); accessOptions.focus = false; document.getElementById('chip-focus').classList.remove('on'); }
+
+  function renderMarkdown(md) {
+    return md
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+      .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+      .replace(/^[-*⚡🔵🟡🟢•] (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g, s => `<ul>${s}</ul>`)
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^(?!<)(.+)$/gm, m => m.trim() ? m : '')
+      + '</p>';
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.style.animation = 'fadeUp 0.6s ease both'; obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.feat-card').forEach(el => { el.style.opacity = '0'; obs.observe(el); });
+</script>
 </body>
 </html>
