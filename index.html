@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroBridge — Adaptive Learning for Every Mind</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a26;
+      --border: rgba(255,255,255,0.07);
+      --teal: #00e5c8;
+      --amber: #ffb547;
+      --coral: #ff6b6b;
+      --lavender: #b8a9ff;
+      --text: #f0eeff;
+      --muted: #8880a8;
+      --radius: 16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+    }
+    .logo span { color: var(--teal); }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .btn-nav {
+      background: var(--teal);
+      color: #0a0a0f !important;
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-weight: 600 !important;
+      font-size: 0.85rem !important;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,229,200,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 80% 60%, rgba(184,169,255,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 40% at 20% 70%, rgba(255,181,71,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,229,200,0.1);
+      border: 1px solid rgba(0,229,200,0.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--teal);
+      margin-bottom: 28px;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-badge::before { content: '✦'; }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      max-width: 820px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--teal), var(--lavender));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin: 24px auto 40px;
+      line-height: 1.7;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-cta {
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: #0a0a0f;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 32px rgba(0,229,200,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 48px rgba(0,229,200,0.45); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+
+    /* ── FLOATING CARDS ── */
+    .hero-cards {
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+      margin-top: 64px;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+    .mini-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .mini-card .icon { font-size: 1.4rem; }
+    .mini-card .label { color: var(--muted); font-size: 0.75rem; margin-top: 2px; }
+
+    /* ── SECTION ── */
+    section { padding: 96px 24px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      max-width: 640px;
+    }
+    h2 span { color: var(--lavender); }
+
+    /* ── FEATURES GRID ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 56px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: border-color 0.3s, transform 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      opacity: 0.06;
+      transition: opacity 0.3s;
+    }
+    .feature-card.teal::before { background: var(--teal); }
+    .feature-card.amber::before { background: var(--amber); }
+    .feature-card.coral::before { background: var(--coral); }
+    .feature-card.lavender::before { background: var(--lavender); }
+    .feature-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-4px); }
+    .feature-card:hover::before { opacity: 0.12; }
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+    .feature-card.teal .feature-icon { background: rgba(0,229,200,0.12); }
+    .feature-card.amber .feature-icon { background: rgba(255,181,71,0.12); }
+    .feature-card.coral .feature-icon { background: rgba(255,107,107,0.12); }
+    .feature-card.lavender .feature-icon { background: rgba(184,169,255,0.12); }
+    .feature-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+    .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+
+    /* ── DEMO SECTION ── */
+    #demo { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .demo-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+      margin-top: 56px;
+    }
+    .demo-panel {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .demo-header {
+      background: var(--surface2);
+      padding: 16px 24px;
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem; font-weight: 600;
+    }
+    .demo-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .demo-content { padding: 28px; }
+
+    /* ── LEARNING STYLE SELECTOR ── */
+    .style-selector { display: flex; flex-direction: column; gap: 12px; }
+    .style-option {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .style-option.active { border-color: var(--teal); background: rgba(0,229,200,0.06); }
+    .style-option:hover:not(.active) { border-color: rgba(255,255,255,0.15); }
+    .style-icon { font-size: 1.5rem; }
+    .style-info h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 2px; }
+    .style-info p { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── LESSON DISPLAY ── */
+    .lesson-display { display: flex; flex-direction: column; gap: 16px; }
+    .lesson-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+    .lesson-body {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .lesson-visual {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .visual-bar-group { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .bar-row { display: flex; flex-direction: column; gap: 6px; }
+    .bar-label { font-size: 0.78rem; color: var(--muted); display: flex; justify-content: space-between; }
+    .bar-track { height: 8px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 100px; transition: width 1s ease; }
+    .quiz-prompt {
+      background: rgba(184,169,255,0.08);
+      border: 1px solid rgba(184,169,255,0.2);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.88rem;
+      color: var(--lavender);
+    }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .quiz-opt {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+    }
+    .quiz-opt:hover { border-color: var(--teal); background: rgba(0,229,200,0.06); }
+    .quiz-opt.correct { border-color: var(--teal); background: rgba(0,229,200,0.1); color: var(--teal); }
+    .quiz-opt.wrong { border-color: var(--coral); background: rgba(255,107,107,0.1); color: var(--coral); }
+
+    /* ── FOCUS TIMER ── */
+    .focus-timer {
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .timer-ring {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 4px solid var(--surface);
+      border-top-color: var(--amber);
+      margin: 0 auto 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      position: relative;
+      animation: spin 10s linear infinite;
+    }
+    .timer-inner {
+      position: absolute; inset: 4px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,181,71,0.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    @keyframes spin { to { border-top-color: var(--teal); } }
+    .timer-label { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 56px; }
+    .step {
+      display: flex; flex-direction: column; gap: 16px;
+      padding: 32px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--surface2);
+      line-height: 1;
+      position: absolute;
+      top: 20px; right: 24px;
+    }
+    .step h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
+    .step p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 56px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2.8rem;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, var(--teal), var(--lavender));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label { color: var(--muted); font-size: 0.88rem; margin-top: 6px; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 48px 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    footer .logo { font-size: 1.1rem; margin-bottom: 12px; display: block; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .demo-wrapper { grid-template-columns: 1fr; }
+      section { padding: 64px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Neuro<span>Bridge</span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#demo">Demo</a>
+    <a href="#how">How it works</a>
+    <a href="#demo" class="btn-nav">Try it now</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge">AI for Accessibility · Isazi Hackathon 2026</div>
+  <h1>Learning that adapts to <em>your mind</em></h1>
+  <p class="hero-sub">NeuroBridge uses AI to reshape how content is delivered — matching each learner's cognitive style, pace, and sensory preferences in real time.</p>
+  <div class="hero-cta">
+    <button class="btn-primary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">See it in action</button>
+    <button class="btn-secondary" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Learn more</button>
+  </div>
+  <div class="hero-cards">
+    <div class="mini-card">
+      <span class="icon">🧠</span>
+      <div>
+        <div>Cognitive Profiling</div>
+        <div class="label">Personalized from session 1</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <span class="icon">🎯</span>
+      <div>
+        <div>Focus Mode</div>
+        <div class="label">Pomodoro + distraction guard</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <span class="icon">🔊</span>
+      <div>
+        <div>Read-aloud & TTS</div>
+        <div class="label">Full text-to-speech support</div>
+      </div>
+    </div>
+    <div class="mini-card">
+      <span class="icon">✦</span>
+      <div>
+        <div>AI Explanations</div>
+        <div class="label">Rephrased on demand</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-label">Core Features</div>
+    <h2>Built for minds that work <span>differently</span></h2>
+    <div class="features-grid">
+      <div class="feature-card teal">
+        <div class="feature-icon">🧩</div>
+        <h3>Adaptive Content Delivery</h3>
+        <p>The AI profiles each learner's style — visual, auditory, reading-based, or kinesthetic — and reformats content accordingly. Dense paragraphs become diagrams. Facts become stories.</p>
+      </div>
+      <div class="feature-card amber">
+        <div class="feature-icon">⏱️</div>
+        <h3>Sensory-Aware Pacing</h3>
+        <p>Built-in focus timers with Pomodoro-style breaks and calming transitions. Learners with ADHD or sensory sensitivities can set their own rhythm without losing progress.</p>
+      </div>
+      <div class="feature-card coral">
+        <div class="feature-icon">💬</div>
+        <h3>Plain-Language AI Tutor</h3>
+        <p>Ask any question. The AI explains in simpler words, uses analogies, or rewrites in a preferred tone — direct, friendly, or step-by-step — until it clicks.</p>
+      </div>
+      <div class="feature-card lavender">
+        <div class="feature-icon">📊</div>
+        <h3>Progress That Matters</h3>
+        <p>Visual, non-judgmental progress tracking. No red crosses — just encouragement. Tracks effort, consistency and concept mastery separately to reflect real growth.</p>
+      </div>
+      <div class="feature-card teal">
+        <div class="feature-icon">🔊</div>
+        <h3>Full Accessibility Stack</h3>
+        <p>Text-to-speech for every piece of content, high-contrast modes, dyslexia-friendly fonts, and keyboard-only navigation baked in from day one.</p>
+      </div>
+      <div class="feature-card amber">
+        <div class="feature-icon">🌍</div>
+        <h3>South African Context</h3>
+        <p>Designed with the South African curriculum and local language context in mind. Supports code-switching and local examples that resonate with learners on the ground.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="container">
+    <div class="section-label">Interactive Demo</div>
+    <h2>Choose your style. <span>Watch it adapt.</span></h2>
+    <div class="demo-wrapper">
+
+      <!-- LEFT: Style Picker -->
+      <div>
+        <p style="color:var(--muted);font-size:0.9rem;margin-bottom:24px;">Select how you learn best and watch the lesson on the right change in real time.</p>
+        <div class="style-selector">
+          <div class="style-option active" onclick="selectStyle(this,'visual')">
+            <span class="style-icon">👁️</span>
+            <div class="style-info">
+              <h4>Visual Learner</h4>
+              <p>Charts, diagrams & colour-coded info</p>
+            </div>
+          </div>
+          <div class="style-option" onclick="selectStyle(this,'reading')">
+            <span class="style-icon">📖</span>
+            <div class="style-info">
+              <h4>Reading / Writing</h4>
+              <p>Structured text, definitions & notes</p>
+            </div>
+          </div>
+          <div class="style-option" onclick="selectStyle(this,'kinesthetic')">
+            <span class="style-icon">🤲</span>
+            <div class="style-info">
+              <h4>Kinesthetic / Interactive</h4>
+              <p>Quizzes, challenges & hands-on tasks</p>
+            </div>
+          </div>
+          <div class="style-option" onclick="selectStyle(this,'focus')">
+            <span class="style-icon">🧘</span>
+            <div class="style-info">
+              <h4>Focus Mode (ADHD)</h4>
+              <p>Minimal UI + timed micro-sessions</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="focus-timer" id="focus-block" style="display:none; margin-top:20px;">
+          <div class="timer-ring">
+            <div class="timer-inner" id="timer-display">25:00</div>
+          </div>
+          <div class="timer-label">Focus session active · click to pause</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Lesson Panel -->
+      <div class="demo-panel">
+        <div class="demo-header">
+          <div class="demo-dot" style="background:#ff6b6b"></div>
+          <div class="demo-dot" style="background:#ffb547"></div>
+          <div class="demo-dot" style="background:#00e5c8"></div>
+          <span style="margin-left:8px;color:var(--muted)">Lesson: Photosynthesis</span>
+        </div>
+        <div class="demo-content" id="lesson-content">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="section-label">How it Works</div>
+    <h2>From first login to <span>confident learner</span></h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <h3>Quick Cognitive Onboarding</h3>
+        <p>A 5-minute interactive quiz identifies learning preferences, attention span, and any accessibility needs — no labels, no stigma.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <h3>AI Reformats Your Content</h3>
+        <p>Upload any lesson, textbook page, or topic. The AI breaks it into your preferred format — visuals, story, steps, or Q&A — instantly.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <h3>Learn in Your Rhythm</h3>
+        <p>Timed sessions, calming break prompts, and a distraction-free reader mode help you stay present without burning out.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <h3>The AI Watches & Adapts</h3>
+        <p>Struggling on a concept? NeuroBridge detects it from response patterns and automatically offers an alternative explanation or analogy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">1 in 7</div>
+        <div class="stat-label">people globally are neurodiverse — most school systems aren't built for them</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3×</div>
+        <div class="stat-label">higher dropout risk for neurodiverse learners in under-resourced settings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">R0</div>
+        <div class="stat-label">cost to the learner — designed to run on low-bandwidth, any device</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">ways to explain a concept — the AI never gives up on a learner</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Neuro<span style="color:var(--teal)">Bridge</span></div>
+  <p>Built for the Isazi.ai × UNISA AI for Accessibility Hackathon 2026</p>
+  <p style="margin-top:8px; color:#4a4468;">Lethabo Hoaeane · BCom Business Informatics · UNISA</p>
+</footer>
+
+<script>
+  const lessons = {
+    visual: `
+      <div class="lesson-display">
+        <div class="lesson-title">🌿 Photosynthesis — Visual Overview</div>
+        <div class="lesson-body">The plant uses <strong style="color:var(--teal)">sunlight</strong>, <strong style="color:var(--amber)">CO₂</strong>, and <strong style="color:var(--lavender)">water</strong> to produce glucose and oxygen.</div>
+        <div class="lesson-visual">
+          <div class="visual-bar-group">
+            <div class="bar-row">
+              <div class="bar-label"><span>☀️ Sunlight absorbed</span><span style="color:var(--teal)">92%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:92%;background:var(--teal)"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label"><span>💧 Water absorbed</span><span style="color:var(--lavender)">78%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:78%;background:var(--lavender)"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label"><span>🌬️ CO₂ converted</span><span style="color:var(--amber)">85%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--amber)"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label"><span>🍬 Glucose produced</span><span style="color:var(--coral)">71%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:71%;background:var(--coral)"></div></div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:0.8rem;color:var(--muted);text-align:center">AI adapted this lesson to your visual style ✦</div>
+      </div>`,
+
+    reading: `
+      <div class="lesson-display">
+        <div class="lesson-title">📖 Photosynthesis — Definition & Notes</div>
+        <div class="lesson-body">
+          <p><strong>Definition:</strong> Photosynthesis is the biochemical process by which green plants convert light energy into chemical energy (glucose).</p>
+          <br/>
+          <p><strong>Equation:</strong> 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂</p>
+          <br/>
+          <p><strong>Key terms:</strong></p>
+          <ul style="padding-left:16px;margin-top:8px;color:var(--muted);font-size:0.88rem;line-height:2">
+            <li><em>Chlorophyll</em> — pigment that captures sunlight</li>
+            <li><em>Chloroplast</em> — organelle where photosynthesis occurs</li>
+            <li><em>Glucose</em> — sugar produced as energy storage</li>
+            <li><em>Stomata</em> — pores that allow CO₂ and O₂ exchange</li>
+          </ul>
+        </div>
+        <div style="font-size:0.8rem;color:var(--muted);text-align:center">AI adapted this lesson to your reading style ✦</div>
+      </div>`,
+
+    kinesthetic: `
+      <div class="lesson-display">
+        <div class="lesson-title">🎯 Photosynthesis — Quick Quiz</div>
+        <div class="quiz-prompt">
+          <strong>Question 1 of 3:</strong> What does a plant need to perform photosynthesis?
+          <div class="quiz-options" id="quiz-opts">
+            <button class="quiz-opt" onclick="answerQ(this, false)">Oxygen + glucose</button>
+            <button class="quiz-opt" onclick="answerQ(this, true)">Sunlight + CO₂ + water</button>
+            <button class="quiz-opt" onclick="answerQ(this, false)">Heat + nitrogen</button>
+            <button class="quiz-opt" onclick="answerQ(this, false)">Sugar + minerals</button>
+          </div>
+        </div>
+        <div style="font-size:0.8rem;color:var(--muted);text-align:center">AI adapted this lesson to your interactive style ✦</div>
+      </div>`,
+
+    focus: `
+      <div class="lesson-display">
+        <div class="lesson-title">🧘 Focus Session — One Fact at a Time</div>
+        <div class="lesson-body" style="font-size:1.05rem;text-align:center;padding:24px 16px;line-height:2">
+          <p style="color:var(--teal);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">Fact 1 of 3</p>
+          <p>Plants use <strong>chlorophyll</strong> in their leaves to capture energy from sunlight.</p>
+        </div>
+        <div style="display:flex;gap:12px;justify-content:center">
+          <button class="btn-primary" style="font-size:0.85rem;padding:10px 24px">Got it →</button>
+          <button class="btn-secondary" style="font-size:0.85rem;padding:10px 24px">Say again 🔊</button>
+        </div>
+        <div style="font-size:0.8rem;color:var(--muted);text-align:center;margin-top:8px">Distraction-free mode · 3 facts · ~4 min</div>
+      </div>`
+  };
+
+  function selectStyle(el, style) {
+    document.querySelectorAll('.style-option').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('lesson-content').innerHTML = lessons[style];
+    document.getElementById('focus-block').style.display = style === 'focus' ? 'block' : 'none';
+  }
+
+  function answerQ(btn, correct) {
+    document.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+    btn.classList.add(correct ? 'correct' : 'wrong');
+    if (!correct) {
+      document.querySelectorAll('.quiz-opt').forEach(b => {
+        if (b.textContent.includes('Sunlight')) b.classList.add('correct');
+      });
+    }
+  }
+
+  // Init
+  document.getElementById('lesson-content').innerHTML = lessons.visual;
+
+  // Timer
+  let timerEl = document.getElementById('timer-display');
+  let secs = 1500;
+  setInterval(() => {
+    secs--;
+    if (secs < 0) secs = 1500;
+    let m = Math.floor(secs / 60);
+    let s = secs % 60;
+    if (timerEl) timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }, 1000);
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animation = 'fadeUp 0.7s ease both';
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.feature-card, .step, .stat-card').forEach(el => {
+    el.style.opacity = '0';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
