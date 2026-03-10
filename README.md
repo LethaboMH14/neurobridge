@@ -73,7 +73,7 @@ Hosting    →  Static — runs from a single HTML file, no server needed
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/neurobridge.git
+git clone https://github.com/LethaboMH14/neurobridge.git
 cd neurobridge
 
 # No install needed — just open the file
