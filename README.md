@@ -71,20 +71,14 @@ Hosting    →  Static — runs from a single HTML file, no server needed
 
 ## Getting Started
 
-```bash
-# Clone the repo
-git clone https://github.com/LethaboMH14/neurobridge.git
-cd neurobridge
+Just open the app — no installation, no API key, no setup needed.
 
-# No install needed — just open the file
-open index.html
-# or
-python -m http.server 8080
+👉 https://neurobridge-iota.vercel.app
 ```
 
-Add your Claude API key in `index.html`:
+Add your API key in `index.html`:
 ```javascript
-const API_KEY = 'your-anthropic-api-key';
+No API key needed — just open the app and start learning.
 ```
 
 ---
