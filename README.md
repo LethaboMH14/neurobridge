@@ -56,13 +56,13 @@ NeuroBridge is a **mobile-first AI-powered adaptive learning web app** that resh
 ## Tech Stack
 
 ```
-Frontend   →  HTML5 / CSS3 / Vanilla JS  (zero dependencies, works offline)
-AI Layer   →  Anthropic Claude API (claude-sonnet)
+Frontend   →  HTML5 / CSS3 / Vanilla JS  (zero dependencies, mobile-first)
+AI Layer   →  Groq API (LLaMA 3.3 70B)
             •  Content reformatting  
             •  Plain-language explanations  
             •  Quiz generation from any topic  
 TTS        →  Web Speech API (browser-native, no cost)
-Hosting    →  Static — runs from a single HTML file, no server needed
+Hosting    →  Vercel (serverless backend, free tier)
 ```
 
 > ⚡ **Self-contained by design.** No infrastructure, no database, no build tools required — aligns with hackathon constraints.
