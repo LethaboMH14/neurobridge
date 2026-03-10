@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   if (!messages || !system) return res.status(400).json({ error: 'Missing messages or system prompt' });
 
   const apiKey = process.env.GEMINI_API_KEY;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
 
   // Build conversation for Gemini
   const contents = messages.map(m => ({
