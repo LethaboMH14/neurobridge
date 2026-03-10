@@ -76,8 +76,6 @@ Just open the app — no installation, no API key, no setup needed.
 👉 https://neurobridge-iota.vercel.app
 ```
 
-Add your API key in `index.html`:
-```javascript
 No API key needed — just open the app and start learning.
 ```
 
