@@ -2,7 +2,7 @@
 
 > **Isazi.ai × UNISA · AI for Accessibility Hackathon 2026**  
 > Built by Lethabo Hoaeane · BCom Business Informatics · UNISA
-Live : https://neurobridge-iota.vercel.app
+> Live : https://neurobridge-iota.vercel.app
 
 ---
 
